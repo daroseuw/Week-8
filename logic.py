@@ -2,6 +2,10 @@
 # or output happens here. The logic in this file
 # should be unit-testable
 
+import pandas as pd
+from datetime import datetime, date
+from os.path import exists
+
 class Board:
     """
     This class creates a game board, prints it, and checks if it is full.
@@ -141,6 +145,12 @@ class PlayerType:
             return player_list[0][1]
         else:
             return player_list[1][1]
+
+    def get_player_name(self, cur_player_symbol, player_list):
+        if player_list[0][0] == cur_player_symbol:
+            return player_list[0][2]
+        else:
+            return player_list[1][2]
             
 
 class Human:
@@ -179,7 +189,8 @@ class Human:
 
         if self.check_valid_move(board):
             board[self.move_row - 1][self.move_col - 1] = current_player
-            return
+            self.move = (self.move_row - 1, self.move_col - 1)
+            return self.move
         else:
             self.play_move(board, current_player)
 
@@ -345,42 +356,6 @@ class Moves:
         self.winning_symbol = None
         self.winner = False
     
-    # def get_move(self):  
-    #     """
-    #     Requests move input from users and ensures entries are numeric. If move input is
-    #     not numeric, does not break the game and continues to request input.
-    #     """
-    #     while True:
-    #         try:
-    #             self.move_row = int(input("What row would you like to play in?"))
-    #             self.move_col = int(input("What column would you like to play in?"))
-    #         except ValueError:
-    #             self.move_input_error = str("Please enter an integer value for row and column.")
-    #             # print("Please enter an integer value for row and column.")
-    #             #Return to the start of the loop
-    #             continue
-    #         else:
-    #             #Exit the loop
-    #             break
-
-    # def check_valid_move(self, board): # Validates the move input from users
-    #     if (self.move_row >= 1 and self.move_row <= 3) and (self.move_col >= 1 and self.move_col <= 3):
-    #         if board[self.move_row-1][self.move_col-1] == ' ':
-    #             return True
-    #         self.error_message = "T"
-    #         return False
-    #     self.error_message = "B"
-    #     return False
-
-    # def play_move(self, board, current_player): # Combines input and validation
-    #     self.get_move()
-
-    #     if self.check_valid_move(board):
-    #         board[self.move_row - 1][self.move_col - 1] = current_player
-    #         return
-    #     else:
-    #         self.play_move(board, current_player)
-
     def advance_turn(self, current_player): # Advances the turn to the other player
         if current_player == 'X':
             return 'O'
@@ -416,3 +391,62 @@ class Moves:
         else:
             self.winner = False
             return self.winner
+
+class DataHandling():
+    def __init__(self, game_file, move_file):
+        pass
+        self.game_file = game_file
+        self.move_file = move_file
+        if (exists(self.game_file)):
+            self.game_data = pd.read_csv(self.game_file)
+        else:
+            self.game_data = pd.DataFrame(columns=[
+                "Timestamp",
+                "Player 1 Name",
+                "Player 1 Symbol",
+                "Player 1 Type",
+                "Player 2 Name",
+                "Player 2 Symbol",
+                "Player 2 Type",
+                "Winner",
+                "Move Count",
+            ])
+        if (exists(self.move_file)):
+            self.move_data = pd.read_csv(self.move_file)
+        else:
+            self.move_data = pd.DataFrame(columns=[
+                "Game ID",
+                "Move Number",
+                "Player Name",
+                "Player Type",
+                "Player Symbol",
+                "Board Position",
+            ])
+    
+    def record_game_data(self, is_winner, p1_name, p1_symbol, p1_type, p2_name, p2_symbol, p2_type, winner, move_count):
+        self.game_data.loc[len(self.game_data)] = {
+                "Game ID": len(self.game_data),
+                "Timestamp": datetime.now(),
+                "Player 1 Name": p1_name,
+                "Player 1 Symbol": p1_symbol,
+                "Player 1 Type": p1_type,
+                "Player 2 Name": p2_name,
+                "Player 2 Symbol": p2_symbol,
+                "Player 2 Type": p2_type,
+                "Winner": winner if is_winner == True else "None-Draw",
+                "Move Count": move_count,
+            }
+        self.game_data.to_csv(self.game_file, index=False)
+        
+
+    # NEED TO ADD GAME ID:
+    def record_move_data(self, move_num, player_name, player_type, player_symbol, board_position):
+        self.move_data.loc[len(self.move_data)] = {
+                "Game ID": len(self.game_data),
+                "Move Number": move_num,
+                "Player Name": player_name,
+                "Player Type": player_type,
+                "Player Symbol": player_symbol,
+                "Board Position": board_position,
+        }
+        self.move_data.to_csv(self.move_file, index=False)
