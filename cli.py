@@ -3,7 +3,7 @@
 # # For core game logic, see logic.py.
 
 import pandas as pd
-from logic import Players, Board, Moves, PlayerType, Human, Bot, DataHandling
+from logic import Players, Board, Moves, PlayerType, Human, Bot, DataHandling, DataViz
 
 # Run the game from the CLI based on logic.py code:
 class RunGame:
@@ -36,6 +36,7 @@ class RunGame:
         self.game_file = "./data/games.csv"
         self.moves_file = "./data/moves.csv"
         self.data_handling = DataHandling(self.game_file, self.moves_file)
+        self.dataviz = DataViz(self.data_handling.game_data)
         self.move_num = 1
         
     def gameplay(self):
@@ -48,13 +49,12 @@ class RunGame:
             self.current_player_name = self.get_user_info.get_player_name(self.current_player, self.player_vars)
             print(f"It is {self.current_player}'s turn.")
             if self.current_player_type == 'Human':
-                self.human.play_move(self.board, self.current_player)
+                self.move_tup = self.human.play_move(self.board, self.current_player)
             elif self.current_player_type == 'Bot':
-                self.bot.play_move(self.board, self.current_player)
+                self.move_tup = self.bot.play_move(self.board, self.current_player)
             else:
                 print('There is an error with human v. bot play logic')
-            # VERIFY MOVE DATA RECORD:
-            self.data_handling.record_move_data(self.move_num, self.current_player_name, self.current_player_type, self.current_player, self.human.move)
+            self.data_handling.record_move_data(self.move_num, self.current_player_name, self.current_player_type, self.current_player, self.move_tup)
             self.move_num = self.move_num + 1
             # self.move_data_prep = self.data_handling.record_move_data(self.move_data, 1, self.current_player_name, self.current_player_type, self.current_player, self.human.move)
             # self.move_data_prep.to_csv(self.moves_file)
@@ -72,6 +72,13 @@ class RunGame:
             self.gameboard.print_board()
             print("The game resulted in a draw.")
         self.data_handling.record_game_data(self.moves.winner, self.first_player_name, self.first_player, self.first_player_type, self.second_player_name, self.second_player, self.second_player_type, self.current_player, self.move_num - 1)
+        print("\nMove Count:")
+        print(f"{self.move_num - 1} moves")
+        print("\nLeaderboard:")
+        print(self.dataviz.wins_by_player())
+        print("\nAverage Moves to Win:")
+        print(self.dataviz.move_count_avg())
+        self.dataviz.wins_by_type()
         
 
 
