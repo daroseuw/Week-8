@@ -91,24 +91,9 @@ class Players:
                 print("Please enter a non-empty response.")
                 self.second_player_name = input("Please enter the name of the second player.")
 
-# PLAYER TYPE CLASS APPROACH
-    # class Human:
-    #     """
-        
-    #     """   
-    #     def __init__(self):
-    #         pass
-    
-    # class Bot:
-    #     """
-        
-    #     """   
-    #     def __init__(self):
-    #         pass
-
 class PlayerType:
     """
-        
+    Establishes player types for Human vs. Human, Human vs. Bot, and Bot vs. Bot game setup
     """
     def input_player_type(self, player_number):  
         while True:
@@ -140,13 +125,13 @@ class PlayerType:
         else:
             self.set_player_type(player_number)
 
-    def get_player_type(self, cur_player_symbol, player_list):
+    def get_player_type(self, cur_player_symbol, player_list): # Get user input for human or bot type
         if player_list[0][0] == cur_player_symbol:
             return player_list[0][1]
         else:
             return player_list[1][1]
 
-    def get_player_name(self, cur_player_symbol, player_list):
+    def get_player_name(self, cur_player_symbol, player_list): # Get the player's name
         if player_list[0][0] == cur_player_symbol:
             return player_list[0][2]
         else:
@@ -154,6 +139,9 @@ class PlayerType:
             
 
 class Human:
+    """
+    Defines human-specific behavior for the game.
+    """
     def __init__(self):
         pass
     
@@ -168,8 +156,6 @@ class Human:
                 self.move_col = int(input("What column would you like to play in?"))
             except ValueError:
                 self.move_input_error = str("Please enter an integer value for row and column.")
-                # print("Please enter an integer value for row and column.")
-                #Return to the start of the loop
                 continue
             else:
                 #Exit the loop
@@ -195,6 +181,7 @@ class Human:
             self.play_move(board, current_player)
 
 class Bot:
+    """Bot-specific behavior."""
     def __init__(self):
         self.opponent = None
 
@@ -207,142 +194,256 @@ class Bot:
     def play_move(self, board, current_player):
         self.define_opponent(current_player)
 
-        # REPLACE WITH LOOP LOGIC IF TIME ALLOWS
+        # RULE-BASED APPROACH LONG; REPLACE WITH LOOP LOGIC IF TIME ALLOWS
         # diag win
         if board[0][0] == board[2][2] == current_player and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[0][0] == board[1][1] == current_player and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[1][1] == board[2][2] == current_player and board[0][0] == ' ':
             board[0][0] = current_player    
+            self.move = (0, 0)
+            return self.move
         elif board[2][0] == board[0][2] == current_player and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[2][0] == board[1][1] == current_player and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         elif board[1][1] == board[0][2] == current_player and board[2][0] == ' ':
             board[2][0] = current_player
+            self.move = (2, 0)
+            return self.move
 
         # horizontal win
             # first row
         elif board[0][0] == board[0][1] == current_player and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         elif board[0][0] == board[0][2] == current_player and board[0][1] == ' ':
             board[0][1] = current_player
+            self.move = (0, 1)
+            return self.move
         elif board[0][1] == board[0][2] == current_player and board[0][0] == ' ':
             board[0][0] = current_player
+            self.move = (0, 0)
+            return self.move
             # second row
         elif board[1][0] == board[1][1] == current_player and board[1][2] == ' ':
             board[1][2] = current_player
+            self.move = (1, 2)
+            return self.move
         elif board[1][0] == board[1][2] == current_player and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[1][1] == board[1][2] == current_player and board[1][0] == ' ':
             board[1][0] = current_player
+            self.move = (1, 0)
+            return self.move
             # third row
         elif board[2][0] == board[2][1] == current_player and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[2][0] == board[2][2] == current_player and board[2][1] == ' ':
             board[2][1] = current_player
+            self.move = (2, 1)
+            return self.move
         elif board[2][1] == board[2][2] == current_player and board[2][0] == ' ':
             board[2][0] = current_player    
+            self.move = (2, 0)
+            return self.move
         # vertical win
             # first col
         elif board[0][0] == board[1][0] == current_player and board[2][0] == ' ':
             board[2][0] = current_player
+            self.move = (2, 0)
+            return self.move
         elif board[0][0] == board[2][0] == current_player and board[1][0] == ' ':
             board[1][0] = current_player
+            self.move = (1, 0)
+            return self.move
         elif board[1][0] == board[2][0] == current_player and board[0][0] == ' ':
             board[0][0] = current_player
+            self.move = (0, 0)
+            return self.move
             # second col
         elif board[0][1] == board[1][1] == current_player and board[2][1] == ' ':
             board[2][1] = current_player
+            self.move = (2, 1)
+            return self.move
         elif board[0][1] == board[2][1] == current_player and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[1][1] == board[2][1] == current_player and board[0][1] == ' ':
             board[0][1] = current_player
+            self.move = (0, 1)
+            return self.move
             # third col
         elif board[0][2] == board[1][2] == current_player and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[0][2] == board[2][2] == current_player and board[1][2] == ' ':
             board[1][2] = current_player
+            self.move = (1, 2)
+            return self.move
         elif board[1][2] == board[2][2] == current_player and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
 
         # diag block
         elif board[0][0] == board[2][2] == self.opponent and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[0][0] == board[1][1] == self.opponent and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[1][1] == board[2][2] == self.opponent and board[0][0] == ' ':
             board[0][0] = current_player    
+            self.move = (0, 0)
+            return self.move
         elif board[2][0] == board[0][2] == self.opponent and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[2][0] == board[1][1] == self.opponent and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         elif board[1][1] == board[0][2] == self.opponent and board[2][0] == ' ':
             board[2][0] = current_player
+            self.move = (2, 0)
+            return self.move
         # horizontal block
             # first row
         elif board[0][0] == board[0][1] == self.opponent and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         elif board[0][0] == board[0][2] == self.opponent and board[0][1] == ' ':
             board[0][1] = current_player
+            self.move = (0, 1)
+            return self.move
         elif board[0][1] == board[0][2] == self.opponent and board[0][0] == ' ':
             board[0][0] = current_player
+            self.move = (0, 0)
+            return self.move
             # second row
         elif board[1][0] == board[1][1] == self.opponent and board[1][2] == ' ':
             board[1][2] = current_player
+            self.move = (1, 2)
+            return self.move
         elif board[1][0] == board[1][2] == self.opponent and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[1][1] == board[1][2] == self.opponent and board[1][0] == ' ':
             board[1][0] = current_player
+            self.move = (1, 0)
+            return self.move
             # third row
         elif board[2][0] == board[2][1] == self.opponent and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[2][0] == board[2][2] == self.opponent and board[2][1] == ' ':
             board[2][1] = current_player
+            self.move = (2, 1)
+            return self.move
         elif board[2][1] == board[2][2] == self.opponent and board[2][0] == ' ':
             board[2][0] = current_player    
+            self.move = (2, 0)
+            return self.move
         # vertical block
             # first col
         elif board[0][0] == board[1][0] == self.opponent and board[2][0] == ' ':
             board[2][0] = current_player
+            self.move = (2, 0)
+            return self.move
         elif board[0][0] == board[2][0] == self.opponent and board[1][0] == ' ':
             board[1][0] = current_player
+            self.move = (1, 0)
+            return self.move
         elif board[1][0] == board[2][0] == self.opponent and board[0][0] == ' ':
             board[0][0] = current_player
+            self.move = (0, 0)
+            return self.move
             # second col
         elif board[0][1] == board[1][1] == self.opponent and board[2][1] == ' ':
             board[2][1] = current_player
+            self.move = (2, 1)
+            return self.move
         elif board[0][1] == board[2][1] == self.opponent and board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[1][1] == board[2][1] == self.opponent and board[0][1] == ' ':
             board[0][1] = current_player
+            self.move = (0, 1)
+            return self.move
             # third col
         elif board[0][2] == board[1][2] == self.opponent and board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[0][2] == board[2][2] == self.opponent and board[1][2] == ' ':
             board[1][2] = current_player
+            self.move = (1, 2)
+            return self.move
         elif board[1][2] == board[2][2] == self.opponent and board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         # Normal moves
         elif board[0][0] == ' ':
             board[0][0] = current_player
+            self.move = (0, 0)
+            return self.move
         elif board[2][2] == ' ':
             board[2][2] = current_player
+            self.move = (2, 2)
+            return self.move
         elif board[2][0] == ' ':
             board[2][0] = current_player
+            self.move = (2, 0)
+            return self.move
         elif board[1][0] == ' ':
             board[1][0] = current_player
+            self.move = (1, 0)
+            return self.move
         elif board[2][1] == ' ':
             board[2][1] = current_player
+            self.move = (2, 1)
+            return self.move
         elif board[0][2] == ' ':
             board[0][2] = current_player
+            self.move = (0, 2)
+            return self.move
         elif board[1][1] == ' ':
             board[1][1] = current_player
+            self.move = (1, 1)
+            return self.move
         elif board[0][1] == ' ':
             board[0][1] = current_player
+            self.move = (0, 1)
+            return self.move
         elif board[1][2] == ' ':
-            board = current_player
+            board[1][2] = current_player
+            self.move = (1, 2)
+            return self.move
 
 class Moves:
     """
@@ -393,8 +494,10 @@ class Moves:
             return self.winner
 
 class DataHandling():
+    """
+    Handles data from and to csv files.
+    """
     def __init__(self, game_file, move_file):
-        pass
         self.game_file = game_file
         self.move_file = move_file
         if (exists(self.game_file)):
@@ -450,3 +553,28 @@ class DataHandling():
                 "Board Position": board_position,
         }
         self.move_data.to_csv(self.move_file, index=False)
+
+class DataViz:
+    """
+    Visualize game data.
+    """
+    def __init__(self, game_data):
+        self.game_data = game_data
+        self.win_data = self.game_data[self.game_data["Winner"] != "None-Draw"]
+        self.win_data_p1 = self.win_data[self.win_data["Player 1 Symbol"] == self.win_data["Winner"]]
+        self.win_data_p1 = self.win_data_p1[["Player 1 Name", "Player 1 Symbol", "Player 1 Type"]]
+        self.win_data_p1 = self.win_data_p1.rename(columns={"Player 1 Name": "Player Name", "Player 1 Symbol": "Player Symbol", "Player 1 Type": "Player Type"})
+        self.win_data_p2 = self.win_data[self.win_data["Player 2 Symbol"] == self.win_data["Winner"]]
+        self.win_data_p2 = self.win_data_p2[["Player 2 Name", "Player 2 Symbol", "Player 2 Type"]]
+        self.win_data_p2 = self.win_data_p2.rename(columns={"Player 2 Name": "Player Name", "Player 2 Symbol": "Player Symbol", "Player 2 Type": "Player Type"})
+        self.win_data_all = pd.concat([self.win_data_p1, self.win_data_p2])
+
+    def wins_by_player(self):
+        return self.win_data_all.groupby(["Player Name", "Player Type"], sort=True)["Player Symbol"].count().sort_values(ascending = False)
+
+    def move_count_avg(self):
+        return self.win_data["Move Count"].mean()
+
+    def wins_by_type(self):
+        self.win_data_by_type = self.win_data_all.groupby(["Player Type"], sort=True)["Player Symbol"].count().sort_values(ascending = False)        
+        self.win_data_by_type.plot.bar(x="Player Type", rot=0)
